@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">BluetoothConnect</string>
+    <string name="turn_on">Turn On</string>
+    <string name="turn_off">Turn off</string>
+    <string name="discoverable">Discoverable</string>
+    <string name="get_paired_devices">Get Paired Devices</string>
+    <string name="listen">Listen</string>
+    <string name="listenDevices">Listen Devices</string>
+    <string name="Conectar">Conectar</string>
+</resources>
