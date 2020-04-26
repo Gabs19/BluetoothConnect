@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,6 +16,10 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
@@ -22,14 +27,20 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_ENABLE_BT = 0;
     private static final  int REQUEST_CONECTION_BT = 1;
 
+    ConnectedThread connectedThread;
+
     private static String addressMac = null;
 
     UUID uuidCode = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
 
+    List <String> comands = new ArrayList<String>();
+
     boolean conection = false;
+
     TextView StatusBlue,StatusAdress;
     ImageView bluetooth;
-    Button OnBtn, Offbtn, listenbtn;
+    Button OnBtn, Offbtn, listenbtn,sendBtn;
+    ImageButton go,back,left,right;
 
     BluetoothAdapter bluetoothAdapter = null;
     BluetoothDevice bluetoothDevice = null;
@@ -49,6 +60,17 @@ public class MainActivity extends AppCompatActivity {
         OnBtn = findViewById(R.id.turnOn);
         Offbtn = findViewById(R.id.turnOff);
         listenbtn = findViewById(R.id.listen);
+        sendBtn = findViewById(R.id.enviar);
+
+        go = findViewById(R.id.frente);
+        back = findViewById(R.id.tras);
+        left = findViewById(R.id.esquerda);
+        right = findViewById(R.id.direita);
+
+        go.setImageResource(R.drawable.ic_action_up);
+        back.setImageResource(R.drawable.ic_action_back);
+        left.setImageResource(R.drawable.ic_action_left);
+        right.setImageResource(R.drawable.ic_action_rigth);
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
@@ -110,6 +132,62 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+
+        go.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                if (conection) {
+                    comands.add("f");
+//                } else {
+//                    message("Ocorreu um erro : Não está conectado");
+//                }
+            }
+        });
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+//                if (conection) {
+                    comands.add("t");
+//                } else {
+//                    message("Ocorreu um erro : Não está conectado");
+//                }
+            }
+        });
+
+        right.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                if (conection) {
+                    comands.add("d");
+//                } else {
+//                    message("Ocorreu um erro : Não está conectado");
+//                }
+            }
+        });
+
+        left.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                if (conection) {
+                    comands.add("e");
+//                } else {
+//                    message("Ocorreu um erro : Não está conectado");
+//                }
+            }
+        });
+
+        sendBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println(comands);
+                System.out.println(comandLine(comands));
+                comands.clear();
+            }
+        });
+
     }
 
     @SuppressLint("SetTextI18n")
@@ -135,6 +213,8 @@ public class MainActivity extends AppCompatActivity {
                         bluetoothSocket = bluetoothDevice.createInsecureRfcommSocketToServiceRecord(uuidCode);
                         bluetoothSocket.connect();
                         conection = true;
+                        connectedThread = new ConnectedThread(bluetoothSocket);
+                        connectedThread.start();
                         message("Conectado ao:" + addressMac);
 
                         StatusAdress.setText(addressMac);
@@ -151,6 +231,61 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    private class ConnectedThread extends Thread {
+
+        private final InputStream mmInStream;
+        private final OutputStream mmOutStream;
+
+        public ConnectedThread(BluetoothSocket bluetoothSocket) {
+            InputStream tmpIn = null;
+            OutputStream tmpOut = null;
+
+            try {
+                tmpIn = bluetoothSocket.getInputStream();
+                tmpOut = bluetoothSocket.getOutputStream();
+            } catch (IOException e) {
+                message("erro" + e);
+            }
+
+            mmInStream = tmpIn;
+            mmOutStream = tmpOut;
+        }
+
+        public void run() {
+            byte [] buffer = new byte[1024];
+            int numBytes; // bytes returned from read()
+
+            while (true) {
+                try {
+                    numBytes = mmInStream.read(buffer);
+                    //Message readMsg = handler.obtainMessage(MessageConstants.MESSAGE_READ, numBytes, -1, mmBuffer);
+                    //readMsg.sendToTarget();
+                } catch (IOException e) {
+                    message("Input stream was disconnected" + e);
+                    break;
+                }
+            }
+        }
+
+        public void enviar(String comando) {
+            byte[] enviarDados = comando.getBytes();
+
+            try {
+                mmOutStream.write(enviarDados);
+            } catch (IOException e) {
+
+            }
+        }
+    }
+
+    private String comandLine(List<String> comands) {
+        String comandLines = " ";
+        for (String comand : comands) {
+            comandLines+=comand;
+        }
+        return comandLines;
+    }
+    
     private void message(String msg){
         Toast.makeText(this,msg,Toast.LENGTH_SHORT).show();
     }

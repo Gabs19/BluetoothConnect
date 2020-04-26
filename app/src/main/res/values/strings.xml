@@ -7,4 +7,7 @@
     <string name="listen">Listen</string>
     <string name="listenDevices">Listen Devices</string>
     <string name="Conectar">Conectar</string>
+    <string name="tras">tras</string>
+    <string name="enviar">Enviar</string>
+    <string name="Enviar">Enviar</string>
 </resources>
