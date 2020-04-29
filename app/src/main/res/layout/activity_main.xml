@@ -27,6 +27,7 @@
         android:layout_marginLeft="-80dp"
         android:layout_marginTop="20dp" />
 
+
     <Button
         android:id="@+id/turnOn"
         style="@style/Base.Widget.AppCompat.Button.Colored"
@@ -105,6 +106,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
         android:minWidth="30dp"
-        android:text="@string/Conectar" />
+        android:text="@string/Enviar" />
 
 </LinearLayout>

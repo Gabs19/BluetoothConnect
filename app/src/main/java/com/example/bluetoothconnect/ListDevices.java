@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
@@ -37,6 +36,7 @@ public class ListDevices extends ListActivity {
                 String macBt = devices.getAddress();
                 arrayBluetooth.add(nameBT + "\n" + macBt);
             }
+
         }
         setListAdapter(arrayBluetooth);
     }

@@ -6,6 +6,8 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -13,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.IOException;
@@ -26,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_ENABLE_BT = 0;
     private static final  int REQUEST_CONECTION_BT = 1;
+
+    ListDevices listDevices = new ListDevices();
 
     ConnectedThread connectedThread;
 
@@ -133,58 +138,44 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         go.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                if (conection) {
                     comands.add("f");
-//                } else {
-//                    message("Ocorreu um erro : Não está conectado");
-//                }
             }
         });
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-//                if (conection) {
                     comands.add("t");
-//                } else {
-//                    message("Ocorreu um erro : Não está conectado");
-//                }
             }
         });
 
         right.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                if (conection) {
                     comands.add("d");
-//                } else {
-//                    message("Ocorreu um erro : Não está conectado");
-//                }
             }
         });
 
         left.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                if (conection) {
                     comands.add("e");
-//                } else {
-//                    message("Ocorreu um erro : Não está conectado");
-//                }
             }
         });
 
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println(comands);
-                System.out.println(comandLine(comands));
-                comands.clear();
+
+                if (conection) {
+                    connectedThread.enviar(comandLine(comands));
+                    comands.clear();
+                } else {
+                    message("Ocorreu um erro, não está conectado");
+                }
             }
         });
 
@@ -233,38 +224,18 @@ public class MainActivity extends AppCompatActivity {
 
     private class ConnectedThread extends Thread {
 
-        private final InputStream mmInStream;
         private final OutputStream mmOutStream;
 
         public ConnectedThread(BluetoothSocket bluetoothSocket) {
-            InputStream tmpIn = null;
             OutputStream tmpOut = null;
 
             try {
-                tmpIn = bluetoothSocket.getInputStream();
                 tmpOut = bluetoothSocket.getOutputStream();
             } catch (IOException e) {
                 message("erro" + e);
             }
 
-            mmInStream = tmpIn;
             mmOutStream = tmpOut;
-        }
-
-        public void run() {
-            byte [] buffer = new byte[1024];
-            int numBytes; // bytes returned from read()
-
-            while (true) {
-                try {
-                    numBytes = mmInStream.read(buffer);
-                    //Message readMsg = handler.obtainMessage(MessageConstants.MESSAGE_READ, numBytes, -1, mmBuffer);
-                    //readMsg.sendToTarget();
-                } catch (IOException e) {
-                    message("Input stream was disconnected" + e);
-                    break;
-                }
-            }
         }
 
         public void enviar(String comando) {
