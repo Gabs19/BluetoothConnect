@@ -10,8 +10,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,10 +44,12 @@ public class MainActivity extends AppCompatActivity {
 
     boolean conection = false;
 
-    TextView StatusBlue,StatusAdress;
+    TextView StatusAdress,comandView;
     ImageView bluetooth;
-    Button OnBtn, Offbtn, listenbtn,sendBtn;
+    Button listenbtn,sendBtn,delBtn;
     ImageButton go,back,left,right;
+
+    Switch on_off;
 
     BluetoothAdapter bluetoothAdapter = null;
     BluetoothDevice bluetoothDevice = null;
@@ -57,15 +61,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        StatusBlue = findViewById(R.id.statusBluetooth);
         StatusAdress = findViewById(R.id.ende);
+        comandView = findViewById(R.id.comando);
 
         bluetooth = findViewById(R.id.bluetooth);
 
-        OnBtn = findViewById(R.id.turnOn);
-        Offbtn = findViewById(R.id.turnOff);
+        on_off = findViewById(R.id.tag);
+
         listenbtn = findViewById(R.id.listen);
         sendBtn = findViewById(R.id.enviar);
+        delBtn = findViewById(R.id.delete);
 
         go = findViewById(R.id.frente);
         back = findViewById(R.id.tras);
@@ -79,43 +84,31 @@ public class MainActivity extends AppCompatActivity {
 
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
-        if (bluetoothAdapter == null) {
-            StatusBlue.setText("Bluetooth is not avaiable!");
-        } else {
-            StatusBlue.setText("Bluetooth is avaiable!");
-        }
-
         if (bluetoothAdapter.isEnabled()) {
             bluetooth.setImageResource(R.drawable.ic_action_on);
         } else {
             bluetooth.setImageResource(R.drawable.ic_action_off);
         }
 
-        OnBtn.setOnClickListener(new View.OnClickListener() {
+        on_off.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View on) {
-                if (!bluetoothAdapter.isEnabled()) {
-                    message("Turning On Bluetooth . . .");
-                    Intent intentOn = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                    startActivityForResult(intentOn, REQUEST_ENABLE_BT);
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    if (!bluetoothAdapter.isEnabled()) {
+                        message("Turning On Bluetooth . . .");
+                        Intent intentOn = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                        startActivityForResult(intentOn, REQUEST_ENABLE_BT);
+                    }
                 } else {
-                    message("Bluetooth is already on");
+                    if (bluetoothAdapter.isEnabled()) {
+                        bluetoothAdapter.disable();
+                        message("Turning Off Bluetooth . . .");
+                        bluetooth.setImageResource(R.drawable.ic_action_off);
+                    }
                 }
             }
         });
 
-        Offbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View off) {
-                if (bluetoothAdapter.isEnabled()) {
-                    bluetoothAdapter.disable();
-                    message("Turning Off Bluetooth . . .");
-                    bluetooth.setImageResource(R.drawable.ic_action_off);
-                } else {
-                    message("Bluetooth is already off");
-                }
-            }
-        });
 
         listenbtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -141,28 +134,49 @@ public class MainActivity extends AppCompatActivity {
         go.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    comands.add("f");
+                comands.add("f");
+                System.out.println(comands);
+                viewComand();
             }
         });
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    comands.add("t");
+                comands.add("t");
+                System.out.println(comands);
+                viewComand();
             }
         });
 
         right.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    comands.add("d");
+                comands.add("d");
+                System.out.println(comands);
+                viewComand();
             }
         });
 
         left.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    comands.add("e");
+                comands.add("e");
+                System.out.println(comands);
+                viewComand();
+            }
+        });
+
+        delBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (comands != null && !comands.isEmpty()) {
+                    comands.remove(comands.lastIndexOf(comands.get(comands.size() - 1)));
+                    System.out.println(comands);
+                    viewComand();
+                } else {
+                    message("Não a comandos para deletar");
+                }
             }
         });
 
@@ -206,7 +220,7 @@ public class MainActivity extends AppCompatActivity {
                         conection = true;
                         connectedThread = new ConnectedThread(bluetoothSocket);
                         connectedThread.start();
-                        message("Conectado ao:" + addressMac);
+                              message("Conectado ao:" + addressMac);
 
                         StatusAdress.setText(addressMac);
                         listenbtn.setText("Desconectar");
@@ -247,6 +261,14 @@ public class MainActivity extends AppCompatActivity {
 
             }
         }
+    }
+
+    private void viewComand(){
+        String comandsView = "";
+        for (String comando : comands ) {
+            comandsView+=comando;
+        }
+        comandView.setText(comandsView);
     }
 
     private String comandLine(List<String> comands) {

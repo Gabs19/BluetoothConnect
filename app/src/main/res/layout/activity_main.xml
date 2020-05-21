@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,51 +9,32 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/statusBluetooth"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text=""
-        android:textAlignment="center"
-        android:textColor="#000"
-        android:textSize="20sp"
-        android:gravity="center_horizontal" />
-
     <!-- botões de liga/delsiga -->
 
     <ImageView
         android:id="@+id/bluetooth"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginLeft="-80dp"
-        android:layout_marginTop="20dp" />
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginStart="30dp" />
 
-
-    <Button
-        android:id="@+id/turnOn"
-        style="@style/Base.Widget.AppCompat.Button.Colored"
-        android:layout_width="wrap_content"
+    <Switch
+        android:id="@+id/tag"
+        android:layout_width="60dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="-65dp"
-        android:layout_marginRight="-100dp"
-        android:minWidth="30dp"
-        android:text="@string/turn_on" />
-
-    <Button
-        android:id="@+id/turnOff"
-        style="@style/Base.Widget.AppCompat.Button.Colored"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="100dp"
-        android:minWidth="30dp"
-        android:text="@string/turn_off" />
+        android:checked="false"
+        android:layout_marginTop="100dp"
+        android:layout_marginLeft="30dp"
+        android:textOn="@string/on"
+        android:textOff="@string/off"/>
 
     <Button
         android:id="@+id/listen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="100dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="70dp"
+        android:layout_marginLeft="120dp"
         android:minWidth="30dp"
         android:text="@string/Conectar" />
 
@@ -60,52 +42,72 @@
         android:id="@+id/ende"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="-60dp"
-        android:layout_marginRight="80dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="120dp"
+        android:gravity="center_horizontal"
         android:text=""
         android:textAlignment="center"
         android:textColor="#000"
-        android:textSize="20sp"
-        android:gravity="center_horizontal" />
-
+        android:textSize="20sp" />
 
     <ImageButton
         android:id="@+id/frente"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:layout_marginTop="90dp"
-        android:baselineAligned="false"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="160dp"
+        android:layout_marginLeft="150dp"
         android:minWidth="30dp" />
 
     <ImageButton
         android:id="@+id/tras"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="250dp"
+        android:layout_marginLeft="150dp"
         android:minWidth="30dp" />
 
     <ImageButton
         android:id="@+id/direita"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:layout_marginStart="100dp"
-        android:layout_marginLeft="100dp"
-        android:layout_marginTop="-130dp" />
+        android:layout_marginTop="250dp"
+        android:layout_marginLeft="240dp"/>
 
     <ImageButton
         android:id="@+id/esquerda"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:layout_marginTop="-80dp"
-        android:layout_marginEnd="100dp"
-        android:layout_marginRight="100dp" />
+        android:layout_marginTop="250dp"
+        android:layout_marginLeft="60dp"
+        />
 
     <Button
         android:id="@+id/enviar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        style="@style/Base.Widget.AppCompat.Button.Colored"
+        android:layout_width="162dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="350dp"
+        android:layout_marginLeft="30dp"
         android:minWidth="30dp"
         android:text="@string/Enviar" />
 
-</LinearLayout>
+    <Button
+        android:id="@+id/delete"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="350dp"
+        android:layout_marginLeft="210dp"
+        android:minWidth="30dp"
+        android:text="@string/Delete"
+        />
+
+    <TextView
+        android:id="@+id/comando"
+        android:layout_width="320dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="440dp"
+        android:layout_marginLeft="30dp"
+        android:text="" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
